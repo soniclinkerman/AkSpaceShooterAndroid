@@ -8,7 +8,11 @@ import com.ak.spaceshooter.AKSpaceShooter;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		config.setWindowedMode(360,640);
+//		config.height = 640;
+//		config.width = 360;
 		config.setForegroundFPS(60);
+
 		new Lwjgl3Application(new AKSpaceShooter(), config);
 	}
 }
