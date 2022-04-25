@@ -69,11 +69,14 @@ abstract  class Ship {
 
     }
 
-    public void hit(Laser laser)
+    public boolean isHit(Laser laser)
     {
         if(health > 0){
             health--;
+            return  false;
         }
+        return  true;
+
 
     }
 
