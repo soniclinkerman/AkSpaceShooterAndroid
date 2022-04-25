@@ -2,6 +2,8 @@ package com.ak.spaceshooter;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import  com.badlogic.gdx.math.Rectangle;
+
 
 abstract  class Ship {
 
@@ -9,11 +11,7 @@ abstract  class Ship {
     int health;
 
     //DIMENSIONS & POSITIONS
-    float xPosition;
-    float yPosition;
-
-    float width;
-    float height;
+    Rectangle boundingBox;
 
     //LASER INFO
     float laserWidth,laserHeight;
@@ -39,11 +37,7 @@ abstract  class Ship {
         this.movementSpeed = movementSpeed;
         this.health = health;
 
-        this.xPosition = xCenter- width/2;
-        this.yPosition =yCenter - height /2;
-
-        this.width = width;
-        this.height = height;
+        this.boundingBox = new Rectangle(xCenter- width/2,yCenter - height /2,width,height);
 
         this.laserWidth=laserWidth;
         this.laserHeight = laserHeight;
@@ -58,6 +52,7 @@ abstract  class Ship {
 
     public void update(float deltaTime)
     {
+//        boundingBox.set(xPosition,yPosition,width,height);
         timeSinceLastShot+=deltaTime;
     }
 
@@ -66,13 +61,41 @@ abstract  class Ship {
         return timeSinceLastShot - timeBetweenShots >=0;
     }
 
+
+    public boolean intersects(Rectangle otherRectangle)
+    {
+        return  boundingBox.overlaps(otherRectangle);
+
+
+    }
+
+    public void hit(Laser laser)
+    {
+        if(health > 0){
+            health--;
+        }
+
+    }
+
+
     public abstract Laser[] fireLasers();
 
 
     public void draw(Batch batch)
     {
-        batch.draw(shipTextureRegion, xPosition,yPosition,width,height);
+        batch.draw(shipTextureRegion,boundingBox.x,boundingBox.y,boundingBox.width,boundingBox.height);
+        if(health>0)
+        {
+
+        }
 
     }
+
+    public void translate(float deltaX, float deltaY)
+    {
+        boundingBox.setPosition(boundingBox.x+deltaX, boundingBox.y+deltaY);
+
+    }
+
 
 }

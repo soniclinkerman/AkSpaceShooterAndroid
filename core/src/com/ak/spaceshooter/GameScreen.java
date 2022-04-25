@@ -1,12 +1,15 @@
 package com.ak.spaceshooter;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -32,6 +35,7 @@ public class GameScreen implements Screen {
 
     private final int WORLD_WIDTH = 72;
     private final int WORLD_HEIGHT = 128;
+    private final float MOVEMENT_THRESHOLD = 0.5f;
 
 
     Ship playerShip;
@@ -61,7 +65,7 @@ public class GameScreen implements Screen {
         playerShip = new PlayerShip(
                 WORLD_WIDTH/2,WORLD_HEIGHT/4,
                 10,10,
-                5,3,
+                50,3,
                 0.4f,4,
                 45,.5f,playerShipTextureRegion,playerLaserTextureRegion
         );
@@ -90,19 +94,8 @@ public class GameScreen implements Screen {
 
     }
 
-    @Override
-    public void render(float delta) {
-        batch.begin();
-
-        playerShip.update(delta);
-        enemyShip.update(delta);
-        renderBackground(delta);
-
-
-        enemyShip.draw(batch);
-        playerShip.draw(batch);
-
-
+    void renderLasers(float delta)
+    {
         //PLAYER LASERS
         if(playerShip.canFireLaser())
         {
@@ -129,8 +122,8 @@ public class GameScreen implements Screen {
         {
             Laser laser = iterator.next();
             laser.draw(batch);
-            laser.yPosition+=laser.movementSpeed*delta;
-            if(laser.yPosition > WORLD_HEIGHT)
+            laser.boundingBox.y+=laser.movementSpeed*delta;
+            if(laser.boundingBox.y > WORLD_HEIGHT)
             {
                 iterator.remove();
             }
@@ -142,20 +135,149 @@ public class GameScreen implements Screen {
         {
             Laser laser = iterator.next();
             laser.draw(batch);
-            laser.yPosition-=laser.movementSpeed*delta;
-            if(laser.yPosition + laser.height < 0)
+            laser.boundingBox.y-=laser.movementSpeed*delta;
+            if(laser.boundingBox.y + laser.boundingBox.height < 0)
             {
                 iterator.remove();
             }
         }
+    }
+
+
+    void detectCollisions()
+    {
+        ListIterator<Laser> iterator = playerLaserList.listIterator();
+        while(iterator.hasNext())
+        {
+            Laser laser = iterator.next();
+            if(enemyShip.intersects(laser.boundingBox))
+            {
+                //COntact with enemy ship
+                enemyShip.hit(laser);
+                iterator.remove();
+            }
+
+        }
+
+         iterator = enemyLaserList.listIterator();
+        while(iterator.hasNext())
+        {
+            Laser laser = iterator.next();
+            if(playerShip.intersects(laser.boundingBox))
+            {
+                //Contact with player ship
+                playerShip.hit(laser);
+                iterator.remove();
+            }
+
+        }
 
 
 
+    }
+    @Override
+    public void render(float delta) {
+        batch.begin();
+
+        inputDetetcion(delta);
+
+        playerShip.update(delta);
+        enemyShip.update(delta);
+        renderBackground(delta);
 
 
+        enemyShip.draw(batch);
+        playerShip.draw(batch);
 
+
+        renderLasers(delta);
+
+        detectCollisions();
 
         batch.end();
+
+    }
+
+    void inputDetetcion(float deltaTime)
+    {
+        float leftLimit,rightLimit,upLimit,downLimit;
+        leftLimit = -playerShip.boundingBox.x;
+        downLimit = -playerShip.boundingBox.y;
+        rightLimit = WORLD_WIDTH- playerShip.boundingBox.x - playerShip.boundingBox.width;
+        upLimit = WORLD_HEIGHT/ 2- playerShip.boundingBox.y - playerShip.boundingBox.height;
+
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && rightLimit > 0)
+        {
+            float xChange= Math.min(playerShip.movementSpeed * deltaTime,rightLimit);
+            playerShip.translate(xChange,0);
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.UP) && upLimit>0)
+        {
+            float yChange= Math.min(playerShip.movementSpeed * deltaTime,upLimit);
+            playerShip.translate(0,yChange);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN) && downLimit<0)
+        {
+            float yChange= Math.max(-playerShip.movementSpeed * deltaTime,downLimit);
+            playerShip.translate(0,yChange);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && leftLimit < 0)
+        {
+            float xChange = Math.max(-playerShip.movementSpeed * deltaTime,leftLimit);
+            playerShip.translate(xChange,0);
+
+        }
+
+        if (Gdx.input.isTouched())
+        {
+            float xPos = Gdx.input.getX();
+            float yPos = Gdx.input.getY();
+
+            Vector2 coordinates = new Vector2(xPos,yPos);
+            coordinates = viewport.unproject(coordinates);
+
+            Vector2 playerShipCenter = new Vector2(
+                    playerShip.boundingBox.x+ playerShip.boundingBox.width / 2,
+                    playerShip.boundingBox.y+playerShip.boundingBox.height / 2
+                    );
+
+
+            float distance = coordinates.dst(playerShipCenter);
+            if(distance > MOVEMENT_THRESHOLD)
+            {
+                float xDifference = coordinates.x - playerShipCenter.x;
+                float yDifference = coordinates.y - playerShipCenter.y;
+
+                float xMove = xDifference / distance* playerShip.movementSpeed*deltaTime;
+                float yMove = yDifference / distance* playerShip.movementSpeed*deltaTime;
+
+                if(xMove > 0)
+                {
+                    xMove=Math.min(xMove,rightLimit);
+                }
+                else xMove = Math.max(xMove,leftLimit);
+
+
+                if(yMove > 0)
+                {
+                    yMove=Math.min(yMove,upLimit);
+                }
+                else yMove = Math.max(yMove,downLimit);
+
+                playerShip.translate(xMove,yMove);
+            }
+
+
+
+
+
+
+
+
+        }
+
+
 
     }
     void  renderBackground(float time)
