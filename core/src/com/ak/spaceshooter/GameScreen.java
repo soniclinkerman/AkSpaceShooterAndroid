@@ -20,7 +20,6 @@ import java.util.ListIterator;
 
 public class GameScreen implements Screen {
 
-
     private Camera camera;
     private Viewport viewport;
 
@@ -51,8 +50,10 @@ public class GameScreen implements Screen {
     LinkedList<Laser> enemyLaserList;
     LinkedList<Explosion> explosionList;
 
+    private String level_number;//TODO: this is the level number as a string, passed from the constructor. do something with it
+    GameScreen(String level_number){
+        this.level_number=level_number;
 
-    GameScreen(){
         camera = new OrthographicCamera(); //2D CAMERA
         viewport = new StretchViewport(WORLD_WIDTH,WORLD_HEIGHT,camera);
         textureAtlas = new TextureAtlas("Game Assets.atlas");

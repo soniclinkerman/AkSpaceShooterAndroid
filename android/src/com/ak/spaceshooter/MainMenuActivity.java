@@ -15,6 +15,6 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         final Button playButton = (Button) findViewById(R.id.play);
-        playButton.setOnClickListener(v -> startActivity(new Intent(this, AndroidLauncher.class)));
+        playButton.setOnClickListener(v -> startActivity(new Intent(this, LevelSelectActivity.class)));
     }
 }
