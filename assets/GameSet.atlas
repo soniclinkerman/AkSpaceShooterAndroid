@@ -1,0 +1,104 @@
+
+GameSet.png
+size: 4096, 4096
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Space-Background-Tiled
+  rotate: false
+  xy: 0, 1027
+  size: 1080, 2690
+  orig: 1080, 2690
+  offset: 0, 0
+  index: -1
+layer1
+  rotate: false
+  xy: 2025, 1785
+  size: 1080, 1932
+  orig: 1080, 1932
+  offset: 0, 0
+  index: -1
+layer2
+  rotate: false
+  xy: 1080, 1367
+  size: 945, 2350
+  orig: 945, 2350
+  offset: 0, 0
+  index: -1
+layer3
+  rotate: false
+  xy: 0, 32
+  size: 854, 995
+  orig: 854, 995
+  offset: 0, 0
+  index: -1
+ship_01
+  rotate: false
+  xy: 1080, 1335
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+ship_02
+  rotate: false
+  xy: 2025, 1753
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
+ship_03
+  rotate: false
+  xy: 3105, 3685
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 15
+ship_04
+  rotate: false
+  xy: 0, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 7
+ship_05
+  rotate: false
+  xy: 854, 995
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 12
+ship_06
+  rotate: false
+  xy: 1080, 1303
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 14
+tile_01
+  rotate: false
+  xy: 1112, 1351
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+tile_02
+  rotate: false
+  xy: 2025, 1737
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 26
+tile_03
+  rotate: false
+  xy: 2057, 1769
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 25
+tile_04
+  rotate: false
+  xy: 3105, 3669
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1

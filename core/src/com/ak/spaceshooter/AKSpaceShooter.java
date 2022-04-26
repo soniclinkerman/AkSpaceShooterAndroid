@@ -5,11 +5,18 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.Screen;
 
 import java.util.Random;
 
 public class AKSpaceShooter extends Game {
 	private String level;
+
+	public void setLevel(String level) {
+		this.level = level;
+		System.out.println(level);
+	}
+
 	public AKSpaceShooter(){}
 	public AKSpaceShooter(String level_number){
 		level = level_number;
@@ -38,10 +45,16 @@ public class AKSpaceShooter extends Game {
 
 	@Override
 	public void create() {
+		setLevel("2");
 		gameScreen = new GameScreen(level);
 		setScreen(gameScreen);
 
 
-
 	}
+
+
+
 }
+
+
+
