@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName="user")
 public class User {
 
-    public User(int id, long high_score, String username, int level, String selectedCharacter) {
+    public User(int id, long high_score, String username, String level, String selectedCharacter) {
         this.id = id;
         this.high_score = high_score;
         this.username=username;
@@ -26,7 +26,7 @@ public class User {
     public String username;
 
     @ColumnInfo(name = "level")
-    public int level;
+    public String level;
 
     @ColumnInfo(name = "selectedCharacter")
     public String selectedCharacter;

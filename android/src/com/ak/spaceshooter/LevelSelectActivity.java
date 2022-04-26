@@ -10,8 +10,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.ak.spaceshooter.db.Level;
+import com.ak.spaceshooter.db.LevelDatabase;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +31,8 @@ public class LevelSelectActivity extends AppCompatActivity {
         levelGrid.setAdapter(adapter);
         levelGrid.setLayoutManager(new GridLayoutManager(this,4));
         //levelGrid.setLayoutManager(new GridLayoutManager(this,4, GridLayoutManager.HORIZONTAL, false));
+
+        LevelDatabase.getDatabase(this).levelDAO().getAll().observe(this, adapter::setLevels);
     }
 
 
@@ -36,7 +42,7 @@ public class LevelSelectActivity extends AppCompatActivity {
 
     public class LevelSelectAdapter extends RecyclerView.Adapter<LevelSelectAdapter.LevelViewHolder> {
         private final LayoutInflater layoutInflater;
-        private final List<String> levels = Arrays.asList("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20");
+        private List<Level> levels;
         LevelSelectAdapter(Context context){
             layoutInflater = LayoutInflater.from(context);
         }
@@ -50,7 +56,7 @@ public class LevelSelectActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull LevelViewHolder holder, int position) {
-            String currentLevel = levels.get(position);
+            String currentLevel = levels.get(position).id;
             holder.levelNumber=currentLevel;
             holder.levelView.setText(currentLevel);
         }
@@ -62,10 +68,16 @@ public class LevelSelectActivity extends AppCompatActivity {
             else return 0;
         }
 
+        void setLevels(List<Level> levels){
+            this.levels = levels;
+            notifyDataSetChanged();
+        }
 
 
 
-        class LevelViewHolder extends RecyclerView.ViewHolder{
+
+
+    class LevelViewHolder extends RecyclerView.ViewHolder{
             private final TextView levelView;
 
             private String levelNumber;
