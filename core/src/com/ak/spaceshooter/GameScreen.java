@@ -74,7 +74,8 @@ public class GameScreen implements Screen {
 
 
 
-        explosionTexture = new Texture("exp2_0.png");
+//        explosionTexture = new Texture("exp2_0.png");
+        explosionTexture = new Texture("Explosion.png");
         System.out.println(explosionTexture);
 
 

@@ -14,15 +14,17 @@ public class Explosion {
     Explosion(Texture texture, Rectangle boundingBox, float totalAnimationTime){
         this.boundingBox = boundingBox;
 
-        TextureRegion[][] textureRegion2D = TextureRegion.split(texture,64, 64);
+//        TextureRegion[][] textureRegion2D = TextureRegion.split(texture,64, 64);
 
-        TextureRegion[] textureRegion1D = new TextureRegion[16];
+        TextureRegion[][] textureRegion2D = TextureRegion.split(texture,texture.getWidth() / 5, texture.getHeight()/1);
+
+        TextureRegion[] textureRegion1D = new TextureRegion[5];
 
 
         int index=0;
-        for(int i=0; i < 4; i++)
+        for(int i=0; i < 1; i++)
         {
-            for(int j=0; j < 4; j++)
+            for(int j=0; j < 5; j++)
             {
                textureRegion1D[index] = textureRegion2D[i][j];
                index++;
