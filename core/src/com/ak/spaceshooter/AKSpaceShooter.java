@@ -10,7 +10,7 @@ import com.badlogic.gdx.Screen;
 import java.util.Random;
 
 public class AKSpaceShooter extends Game {
-	private String level;
+	private String level = "2";
 
 	public void setLevel(String level) {
 		this.level = level;
@@ -45,7 +45,6 @@ public class AKSpaceShooter extends Game {
 
 	@Override
 	public void create() {
-		setLevel("2");
 		gameScreen = new GameScreen(level);
 		setScreen(gameScreen);
 
