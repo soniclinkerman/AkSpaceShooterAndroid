@@ -1,5 +1,6 @@
 package com.ak.spaceshooter;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -13,6 +14,14 @@ public class AndroidLauncher extends AndroidApplication {
 		Bundle extras = getIntent().getExtras();
 		String level_number = extras.getString("level number");
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new AKSpaceShooter(level_number), config);
+
+		ResultScreen resultScreen = (score,userWon) -> {
+			Intent intent = new Intent(getApplicationContext(), GameResultActivity.class);
+			intent.putExtra("score", score);
+			intent.putExtra("userWon", userWon);
+			startActivity(intent);
+		};
+
+		initialize(new AKSpaceShooter(level_number,resultScreen), config);
 	}
 }

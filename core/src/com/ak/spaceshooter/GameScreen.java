@@ -26,6 +26,7 @@ import java.util.Locale;
 
 public class GameScreen implements Screen {
 
+
     private Camera camera;
     private Viewport viewport;
 
@@ -68,8 +69,10 @@ public class GameScreen implements Screen {
     float hudVerticalMargin, hudLextX, hudRightX, hudCenterX, hudRow1Y,hudRow2Y,hudSectionWidth;
 
     private String level_number;//TODO: this is the level number as a string, passed from the constructor. do something with it
-    GameScreen(String level_number){
+    ResultScreen resultScreen;
+    GameScreen(String level_number,ResultScreen resultScreen){
         this.level_number=level_number;
+        this.resultScreen = resultScreen;
 
         switch (level_number)
         {
@@ -306,7 +309,7 @@ public class GameScreen implements Screen {
 
         playerShip.update(delta);
 
-        if(playerShip.lives>0 && shipsToDestroy > 0) {
+        if(playerShip.lives>0 && shipsToDestroy > enemyShipsList.size()) {
             spawnEnemyShips(delta);
         }
 
@@ -346,6 +349,11 @@ public class GameScreen implements Screen {
         updateAndRenderHUD();
 
         batch.end();
+
+
+        if(playerShip.lives<=0 || shipsToDestroy<=0){
+            resultScreen.openResultScreen(score,playerShip.lives>0 );
+        }
 
     }
 

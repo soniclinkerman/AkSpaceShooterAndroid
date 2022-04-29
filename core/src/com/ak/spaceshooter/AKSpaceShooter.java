@@ -11,6 +11,7 @@ import java.util.Random;
 
 public class AKSpaceShooter extends Game {
 	private String level = "2";
+	private ResultScreen resultScreen = (score,userWon) -> System.out.println("No result screen implemented. Score: "+score);
 
 	public void setLevel(String level) {
 		this.level = level;
@@ -18,8 +19,9 @@ public class AKSpaceShooter extends Game {
 	}
 
 	public AKSpaceShooter(){}
-	public AKSpaceShooter(String level_number){
+	public AKSpaceShooter(String level_number, ResultScreen resultScreen){
 		level = level_number;
+		this.resultScreen=resultScreen;
 	}
 
 	GameScreen gameScreen;
@@ -45,7 +47,7 @@ public class AKSpaceShooter extends Game {
 
 	@Override
 	public void create() {
-		gameScreen = new GameScreen(level);
+		gameScreen = new GameScreen(level,resultScreen);
 		setScreen(gameScreen);
 
 

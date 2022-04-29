@@ -11,7 +11,8 @@
         android:layout_width="364dp"
         android:layout_height="54dp"
         android:fontFamily="sans-serif-condensed-medium"
-        android:text="H I G H S C O R E"
+        android:gravity="center_horizontal"
+        android:text="S C O R E"
         android:textAlignment="center"
         android:textColor="#5000FF"
         android:textSize="48sp"
@@ -19,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.091" />
+        app:layout_constraintVertical_bias="0.27" />
 
     <Button
         android:id="@+id/back_to_main_menu"
@@ -36,6 +37,7 @@
         android:id="@+id/points"
         android:layout_width="219dp"
         android:layout_height="112dp"
+        android:gravity="center_horizontal"
         android:text="1000"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
@@ -43,9 +45,25 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.531"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.331" />
+        app:layout_constraintVertical_bias="0.45" />
+
+    <TextView
+        android:id="@+id/userWon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="YOU WON!"
+        android:textColor="@color/teal_200"
+        android:textSize="60sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/highscore"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.485"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
