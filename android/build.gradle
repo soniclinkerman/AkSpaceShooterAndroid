@@ -18,7 +18,7 @@ android {
     }
     defaultConfig {
         applicationId "com.ak.spaceshooter"
-        minSdkVersion 14
+        minSdkVersion 17
         targetSdkVersion 32
         versionCode 1
         versionName "1.0"
@@ -87,6 +87,11 @@ task run(type: Exec) {
 
     def adb = path + "/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.ak.spaceshooter/com.ak.spaceshooter.AndroidLauncher'
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
 }
 
 eclipse.project.name = appName + "-android"

@@ -29,7 +29,9 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         final Button playButton = (Button) findViewById(R.id.play);
+        final Button settingsButton = (Button) findViewById(R.id.settings);
         playButton.setOnClickListener(this::onClickPlay);
+        settingsButton.setOnClickListener(this::onClickSettings);
 
         //NOTIFICATION CODE
         NotificationChannel();
@@ -60,6 +62,10 @@ public class MainMenuActivity extends AppCompatActivity {
         LevelDatabase levelDatabase = LevelDatabase.getDatabase(this);
         LiveData<List<Level>> levels = levelDatabase.levelDAO().getAll();
         startActivity(new Intent(this, LevelSelectActivity.class));
+
+    }
+    public void onClickSettings(View v){
+        startActivity(new Intent(this, SettingsActivity.class));
 
     }
 
