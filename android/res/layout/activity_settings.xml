@@ -89,7 +89,7 @@
         android:layout_width="249dp"
         android:layout_height="47dp"
         android:fontFamily="sans-serif-condensed-medium"
-        android:text="Instructions:"
+        android:text="How to play:"
         android:textAlignment="center"
         android:textColor="#5000FF"
         android:textSize="24sp"

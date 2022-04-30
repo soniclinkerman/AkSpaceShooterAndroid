@@ -15,15 +15,18 @@
         android:isGame="true"
         android:label="@string/app_name"
         tools:ignore="UnusedAttribute">
-
+        <activity
+            android:name=".LeaderboardActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".SettingsActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            tools:ignore="LockedOrientationActivity">
-        </activity>
-
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".MainMenuActivity"
             android:exported="true"
@@ -32,35 +35,28 @@
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".LevelSelectActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            tools:ignore="LockedOrientationActivity">
-
-        </activity>
-
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".GameResultActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            tools:ignore="LockedOrientationActivity">
-
-        </activity>
-
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".AndroidLauncher"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout"
             android:exported="true"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity">
-        </activity>
+            tools:ignore="LockedOrientationActivity" />
 
         <receiver
             android:name=".MemoBroadcast"

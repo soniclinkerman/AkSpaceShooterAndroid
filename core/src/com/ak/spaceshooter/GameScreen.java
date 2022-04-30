@@ -77,7 +77,9 @@ public class GameScreen implements Screen {
 
     private String level_number;//TODO: this is the level number as a string, passed from the constructor. do something with it
     ResultScreen resultScreen;
-    GameScreen(String level_number,ResultScreen resultScreen){
+    SoundSettings soundSettings;
+    float sfxVolume;
+    GameScreen(String level_number,ResultScreen resultScreen, SoundSettings soundSettings){
         this.level_number=level_number;
         this.resultScreen = resultScreen;
 
@@ -151,11 +153,15 @@ public class GameScreen implements Screen {
         music = Gdx.audio.newMusic(Gdx.files.internal("Track1.mp3"));
         music.setVolume(0.2f);
         music.setLooping(true);
-        music.play();
+        if(soundSettings.getMusic())
+            music.play();
 
         // SFX
         sound = Gdx.audio.newSound(Gdx.files.internal("explosion.mp3"));
         laserSound = Gdx.audio.newSound(Gdx.files.internal("laser.mp3"));
+        sfxVolume= soundSettings.getSFX()?1:0;
+
+
 
 
         batch = new SpriteBatch();
@@ -233,7 +239,7 @@ public class GameScreen implements Screen {
         while(enemyShipListIterator.hasNext()) {
             EnemyShip enemyShip = enemyShipListIterator.next();
             if (enemyShip.canFireLaser()) {
-                long id = laserSound.play(1.0f);
+                long id = laserSound.play(sfxVolume);
                 laserSound.setPitch(id, 2.0f);
                 laserSound.setLooping(id,false);
                 Laser[] lasers = enemyShip.fireLasers();
@@ -287,7 +293,7 @@ public class GameScreen implements Screen {
                                 new Explosion(explosionTexture, new Rectangle(enemyShip.boundingBox), .7f));
                         score+=100;
                         shipsToDestroy--;
-                        long id = sound.play(1.0f);
+                        long id = sound.play(sfxVolume);
 
                         sound.setLooping(id,false);
 
@@ -311,6 +317,8 @@ public class GameScreen implements Screen {
                     System.out.println("HIT");
                     if(playerShip.lives < 1)
                     {
+                        long id = sound.play(sfxVolume);
+                        sound.setLooping(id,false);
                         explosionList.add(
                                 new Explosion(explosionTexture, new Rectangle(playerShip.boundingBox), .7f * 2));
                         isPlayerDead=true;
@@ -374,7 +382,7 @@ public class GameScreen implements Screen {
         batch.end();
 
 
-        if(playerShip.lives<=0 || shipsToDestroy<=0){
+        if((playerShip.lives<=0 || shipsToDestroy<=0)&&explosionList.isEmpty() ){
             resultScreen.openResultScreen(score,playerShip.lives>0 );
         }
 
