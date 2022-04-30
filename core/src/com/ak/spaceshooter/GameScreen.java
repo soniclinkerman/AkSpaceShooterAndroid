@@ -304,8 +304,11 @@ public class GameScreen implements Screen {
             Laser laser = laserListIterator.next();
             if (playerShip.intersects(laser.boundingBox) && !isPlayerDead) {
                 //Contact with player ship
+                playerShip.lives--;
+
                 if (playerShip.isHit(laser)) {
-                    playerShip.lives--;
+
+                    System.out.println("HIT");
                     if(playerShip.lives < 1)
                     {
                         explosionList.add(
