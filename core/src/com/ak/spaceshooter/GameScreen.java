@@ -3,6 +3,8 @@ package com.ak.spaceshooter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -62,6 +64,11 @@ public class GameScreen implements Screen {
 
     boolean isPlayerDead = false;
 
+    Sound sound;
+    Music music;
+
+    Sound laserSound;
+
 
 
     //HUD UI
@@ -81,10 +88,8 @@ public class GameScreen implements Screen {
                 timeBetweenEnemySpawns=3f;
                 break;
             case "2":
-//                shipsToDestroy= 9;
-//                timeBetweenEnemySpawns=2f;
-                shipsToDestroy= 99;
-                timeBetweenEnemySpawns=.5f;
+                shipsToDestroy= 9;
+                timeBetweenEnemySpawns=2f;
                 break;
             case "3":
                 shipsToDestroy=12;
@@ -139,18 +144,25 @@ public class GameScreen implements Screen {
         explosionList = new LinkedList<>();
 
 
-
-
-
-
-
         playerLaserList = new LinkedList<>();
         enemyLaserList= new LinkedList<>();
 
+        // MUSIC
+        music = Gdx.audio.newMusic(Gdx.files.internal("Track1.mp3"));
+        music.setVolume(0.2f);
+        music.setLooping(true);
+        music.play();
+
+        // SFX
+        sound = Gdx.audio.newSound(Gdx.files.internal("explosion.mp3"));
+        laserSound = Gdx.audio.newSound(Gdx.files.internal("laser.mp3"));
 
 
         batch = new SpriteBatch();
         prepareHUD();
+
+
+
 
     }
 
@@ -221,6 +233,9 @@ public class GameScreen implements Screen {
         while(enemyShipListIterator.hasNext()) {
             EnemyShip enemyShip = enemyShipListIterator.next();
             if (enemyShip.canFireLaser()) {
+                long id = laserSound.play(1.0f);
+                laserSound.setPitch(id, 2.0f);
+                laserSound.setLooping(id,false);
                 Laser[] lasers = enemyShip.fireLasers();
                 for (Laser laser : lasers) {
                     enemyLaserList.add(laser);
@@ -272,6 +287,11 @@ public class GameScreen implements Screen {
                                 new Explosion(explosionTexture, new Rectangle(enemyShip.boundingBox), .7f));
                         score+=100;
                         shipsToDestroy--;
+                        long id = sound.play(1.0f);
+
+                        sound.setLooping(id,false);
+
+
                     }
                     laserListIterator.remove();
                     break;
@@ -552,6 +572,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+
+        music.dispose();
+        sound.dispose();
 
     }
 }
