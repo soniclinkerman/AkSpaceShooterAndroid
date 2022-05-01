@@ -1,6 +1,7 @@
 package com.ak.spaceshooter;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -46,6 +47,12 @@ public class GameResultActivity extends AppCompatActivity {
 
 
         ((Button)findViewById(R.id.back_to_main_menu)).setOnClickListener(this::onClickMainMenu);
+        ((Button)findViewById(R.id.twitterShare)).setOnClickListener((view)->{
+            String url = "http://www.twitter.com/intent/tweet?text="+Uri.encode("I just got a score of "+score+" in Space Shooter! Can you beat my score? Download now!");
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
+        });
 
     }
     public void onClickMainMenu(View v){

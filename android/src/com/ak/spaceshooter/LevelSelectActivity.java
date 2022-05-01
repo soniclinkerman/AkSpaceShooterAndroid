@@ -33,7 +33,6 @@ public class LevelSelectActivity extends AppCompatActivity {
         levelGrid.setAdapter(adapter);
         levelGrid.setLayoutManager(new GridLayoutManager(this,4));
         //levelGrid.setLayoutManager(new GridLayoutManager(this,4, GridLayoutManager.HORIZONTAL, false));
-
         LevelDatabase.getDatabase(this).levelDAO().getAll().observe(this, adapter::setLevels);
     }
 
