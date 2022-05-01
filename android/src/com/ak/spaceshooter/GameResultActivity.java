@@ -21,6 +21,7 @@ public class GameResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_results);
         Bundle extras = getIntent().getExtras();
         int score = extras.getInt("score");
+        String level_number = extras.getString("level number");
         boolean userWon = extras.getBoolean("userWon");
 
         TextView winText = findViewById(R.id.userWon);
@@ -34,6 +35,15 @@ public class GameResultActivity extends AppCompatActivity {
 
         TextView points = findViewById(R.id.points);
         points.setText(String.valueOf(score));
+        LevelDatabase.getDatabase(this);
+        System.out.println("LEVEL NUMBER "+level_number);
+        LevelDatabase.getLevel(level_number,level -> {
+            if(userWon)
+                level.completed=true;
+            level.high_score=Math.max(score, level.high_score);
+            LevelDatabase.updateLevel(level);
+        });
+
 
         ((Button)findViewById(R.id.back_to_main_menu)).setOnClickListener(this::onClickMainMenu);
 

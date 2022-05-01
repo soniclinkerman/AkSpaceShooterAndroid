@@ -1,7 +1,11 @@
 package com.ak.spaceshooter.db;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -12,6 +16,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import java.util.logging.LogRecord;
 
 @Database(entities = {Level.class}, version = 1, exportSchema = false)
 public abstract class LevelDatabase extends RoomDatabase {
@@ -61,6 +67,20 @@ public abstract class LevelDatabase extends RoomDatabase {
 
     public static void updateLevel(Level... levels) {
         (new Thread(()->INSTANCE.levelDAO().updateLevels(levels))).start();
+    }
+    public static void getLevel(String id, LevelListener listener){
+        Handler handler = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(Message msg){
+                super.handleMessage(msg);
+                listener.onLevelReturned((Level) msg.obj);
+            }
+        };
+        (new Thread(()->{
+            Message msg = handler.obtainMessage();
+            msg.obj=INSTANCE.levelDAO().getById(id);
+            handler.sendMessage(msg);
+        })).start();
     }
 
 

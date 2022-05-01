@@ -1,8 +1,6 @@
 package com.ak.spaceshooter;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 
@@ -11,15 +9,12 @@ import androidx.lifecycle.LiveData;
 
 import com.ak.spaceshooter.db.Level;
 import com.ak.spaceshooter.db.LevelDatabase;
-import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 
 import java.util.Calendar;
 import java.util.List;
@@ -29,7 +24,7 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        final Button playButton = (Button) findViewById(R.id.play);
+        final Button playButton = (Button) findViewById(R.id.data_upload);
         final Button settingsButton = (Button) findViewById(R.id.settings);
         final Button leaderboard = findViewById(R.id.leaderboard);
         playButton.setOnClickListener(this::onClickPlay);
@@ -57,7 +52,6 @@ public class MainMenuActivity extends AppCompatActivity {
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),pendingIntent);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),1000*60*60,pendingIntent);
         //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
-
 
 
 

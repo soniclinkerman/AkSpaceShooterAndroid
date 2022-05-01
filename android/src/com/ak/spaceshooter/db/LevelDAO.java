@@ -18,7 +18,7 @@ public interface LevelDAO {
     LiveData<List<Level>> getAll();
 
     @Query("SELECT * FROM level WHERE level_number = :levelNumber")
-    Level getById(int levelNumber);
+    Level getById(String levelNumber);
 
     @Insert
     void insert(Level... levels);

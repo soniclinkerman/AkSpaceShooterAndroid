@@ -17,8 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ak.spaceshooter.db.Level;
 import com.ak.spaceshooter.db.LevelDatabase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LevelSelectActivity extends AppCompatActivity {
     @Override
@@ -69,7 +71,12 @@ public class LevelSelectActivity extends AppCompatActivity {
         }
 
         void setLevels(List<Level> levels){
-            this.levels = levels;
+            int showUncompletedLevels=1;
+            this.levels = new ArrayList<>();
+            for(Level level : levels){
+                 if(level.completed||showUncompletedLevels-->0)
+                     this.levels.add(level);
+            }
             notifyDataSetChanged();
         }
 

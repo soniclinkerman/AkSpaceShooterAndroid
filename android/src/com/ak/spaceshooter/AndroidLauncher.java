@@ -21,6 +21,7 @@ public class AndroidLauncher extends AndroidApplication {
 			Intent intent = new Intent(getApplicationContext(), GameResultActivity.class);
 			intent.putExtra("score", score);
 			intent.putExtra("userWon", userWon);
+			intent.putExtra("level number",level_number);
 			startActivity(intent);
 		};
 		SoundSettings soundSettings = new SoundSettings() {

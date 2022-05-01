@@ -105,6 +105,9 @@ public class GameScreen implements Screen {
                 shipsToDestroy=15;
                 timeBetweenEnemySpawns=1f;
                 break;
+            default:
+                shipsToDestroy=Integer.parseInt(level_number)*3;
+                timeBetweenEnemySpawns=0.5f;
         }
 
 

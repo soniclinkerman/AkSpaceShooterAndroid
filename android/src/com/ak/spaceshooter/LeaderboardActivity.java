@@ -8,16 +8,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ak.spaceshooter.db.LevelDatabase;
 import com.google.android.gms.tasks.Task;
+import com.google.api.Authentication;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,7 +44,8 @@ public class LeaderboardActivity extends AppCompatActivity {
     FirebaseAuth auth = FirebaseAuth.getInstance();
     LeaderboardActivity.LeaderBoardAdapter adapter;
 
-
+    String firestoreUID;
+    long userHighScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +61,29 @@ public class LeaderboardActivity extends AppCompatActivity {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(levelGrid.getContext(),
                 GridLayoutManager.VERTICAL);
         levelGrid.addItemDecoration(dividerItemDecoration);
+        LevelDatabase.getDatabase(this).levelDAO().getAll().observe(this, (v)->{
+            userHighScore=v.stream().map(level -> level.high_score).reduce(Math::max).get();
+            auth.signInAnonymously().addOnCompleteListener(this::onAuthenticate);
+        });
 
-        auth.signInAnonymously().addOnCompleteListener(this::onAuthenticate);
+        findViewById(R.id.data_upload).setOnClickListener(this::uploadData);
 
+
+    }
+    public void uploadData(View v){
+        DocumentReference docRef = db.collection("leaderboard").document("space shooter");
+        docRef.get().addOnCompleteListener((task)->{
+            if (!task.isSuccessful()) {
+                Log.d(TAG, "get failed with ", task.getException());
+                return;
+            }
+            DocumentSnapshot document = task.getResult();
+            HashMap<String,HashMap> lb = new HashMap(document.getData());
+            String leaderBoardName = PreferenceManager.getDefaultSharedPreferences(this).getString("leaderBoardName",firestoreUID);
+            lb.put(firestoreUID, new LeaderboardEntry(leaderBoardName,userHighScore,false).toHashMap());
+            db.collection("leaderboard").document("space shooter").set(lb);
+            docRef.get().addOnCompleteListener(this::onDataRetrieved);
+        });
     }
 
 
@@ -64,8 +92,8 @@ public class LeaderboardActivity extends AppCompatActivity {
             Log.d(TAG, "authenticate failed with ", task.getException());
             return;
         }
-        // Authentication succeeded
-        //FirebaseUser user = auth.getCurrentUser();
+        //Authentication succeeded
+        firestoreUID = auth.getCurrentUser().getUid();
         DocumentReference docRef = db.collection("leaderboard").document("space shooter");
         docRef.get().addOnCompleteListener(this::onDataRetrieved);
     }
@@ -80,14 +108,14 @@ public class LeaderboardActivity extends AppCompatActivity {
         if (!document.exists()) {
             Log.d(TAG, "No such document");
             Map<String, Object> data = new HashMap<>();
-            data.put("user2", new LeaderboardEntry("user2",100));
-            data.put("user3", new LeaderboardEntry("user3",400));
-            data.put("user4", new LeaderboardEntry("user4",200));
-            data.put("user5", new LeaderboardEntry("user5",700));
-            data.put("user6", new LeaderboardEntry("user6",300));
-            data.put("user7", new LeaderboardEntry("user7",600));
-            data.put("user8", new LeaderboardEntry("user8",800));
-            data.put("user9", new LeaderboardEntry("user9",500));
+            data.put("user2", new LeaderboardEntry("user2",100,false));
+            data.put("user3", new LeaderboardEntry("user3",400,false));
+            data.put("user4", new LeaderboardEntry("user4",200,false));
+            data.put("user5", new LeaderboardEntry("user5",700,false));
+            data.put("user6", new LeaderboardEntry("user6",300,false));
+            data.put("user7", new LeaderboardEntry("user7",600,false));
+            data.put("user8", new LeaderboardEntry("user8",800,false));
+            data.put("user9", new LeaderboardEntry("user9",500,false));
             db.collection("leaderboard").document("space shooter").set(data);
             return;
         }
@@ -98,16 +126,20 @@ public class LeaderboardActivity extends AppCompatActivity {
         List<HashMap<String, Object>> leaderboard = new ArrayList(documentData.values());
         System.out.println(leaderboard);
         adapter.setLeaderboard(leaderboard);
+        Toast.makeText(this, "Leaderboard data successfully loaded.", Toast.LENGTH_SHORT).show();
     }
 
     public class LeaderboardEntry{
         private String username;
         private long highScore;
+        boolean isCurrentUser;
 
-        public LeaderboardEntry(String username, long high_score) {
+        public LeaderboardEntry(String username, long highScore, boolean isCurrentUser) {
             this.username = username;
-            this.highScore = high_score;
+            this.highScore = highScore;
+            this.isCurrentUser = isCurrentUser;
         }
+
         public LeaderboardEntry(HashMap<String,Object> h) {
             this.username = (String) h.get("username");
             this.highScore = (long) h.get("highScore");
@@ -118,8 +150,13 @@ public class LeaderboardActivity extends AppCompatActivity {
         public long getHighScore() {
             return highScore;
         }
+        public HashMap toHashMap(){
+            HashMap h = new HashMap();
+            h.put("username",username);
+            h.put("highScore",highScore);
+            return h;
+        }
     }
-
 
 
 
@@ -139,9 +176,15 @@ public class LeaderboardActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull LeaderboardViewHolder holder, int position) {
+            LeaderboardEntry e = leaderboard.get(position);
             holder.ranking.setText(String.valueOf(position+1));
-            holder.username.setText(leaderboard.get(position).getUsername());
-            holder.score.setText(String.valueOf(leaderboard.get(position).getHighScore()));
+            holder.username.setText(e.getUsername());
+            holder.score.setText(String.valueOf(e.getHighScore()));
+            if (e.isCurrentUser){
+                holder.ranking.setTypeface(null, Typeface.BOLD);
+                holder.username.setTypeface(null, Typeface.BOLD);
+                holder.score.setTypeface(null, Typeface.BOLD);
+            }
         }
 
         @Override
@@ -154,8 +197,16 @@ public class LeaderboardActivity extends AppCompatActivity {
         void setLeaderboard(List<HashMap<String, Object>> entries){
             leaderboard= entries.stream()
                     .map(LeaderboardEntry::new)
-                    .sorted((e1, e2) -> (int) (e2.getHighScore() - e1.getHighScore()))
                     .collect(Collectors.toList());
+            if(!leaderboard.stream().map(e-> e.username.equals(firestoreUID)).reduce((e, e2)->e||e2).get())
+                leaderboard.add(new LeaderboardEntry("You",userHighScore,true));
+            for (LeaderboardEntry entry : this.leaderboard){
+                if(entry.username.equals(firestoreUID)){
+                    entry.isCurrentUser=true;
+                    entry.username="You";
+                }
+            }
+            leaderboard.sort((e1, e2) -> (int) (e2.getHighScore() - e1.getHighScore()));
             notifyDataSetChanged();
         }
 
