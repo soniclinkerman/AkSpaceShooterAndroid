@@ -23,10 +23,10 @@
         android:gravity="center_horizontal" />
 
     <Button
-        android:id="@+id/ship_selection"
+        android:id="@+id/leaderboard"
         android:layout_width="232dp"
         android:layout_height="90dp"
-        android:text="S H I P   S E L E C T I O N"
+        android:text="L E A D E R B O A R D"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -51,7 +51,7 @@
         android:layout_width="232dp"
         android:layout_height="90dp"
         android:text="P L A Y"
-        app:layout_constraintBottom_toTopOf="@+id/ship_selection"
+        app:layout_constraintBottom_toTopOf="@+id/leaderboard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"

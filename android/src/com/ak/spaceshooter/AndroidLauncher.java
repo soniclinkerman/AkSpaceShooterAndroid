@@ -24,7 +24,7 @@ public class AndroidLauncher extends AndroidApplication {
 			startActivity(intent);
 		};
 		SoundSettings soundSettings = new SoundSettings() {
-			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			final boolean sfx=sharedPref.getBoolean("sfx",true);
 			final boolean music=sharedPref.getBoolean("music",true);
 			@Override

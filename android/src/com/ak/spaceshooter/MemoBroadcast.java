@@ -18,10 +18,10 @@ public class MemoBroadcast extends BroadcastReceiver {
         Intent repeating_Intent = new Intent(context, MainMenuActivity.class);
         repeating_Intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, repeating_Intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, repeating_Intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Notification")
                 .setContentIntent(pendingIntent)
-                //.setSmallIcon(R.drawable.beer_notification)
+                .setSmallIcon(R.drawable.ic_launcher)
                 //.setLargeIcon(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.thinkman1), 128, 128, false))
                 .setContentTitle("Space Shooter")
                 .setContentText("Don't miss out on the Space Shooter fun!")

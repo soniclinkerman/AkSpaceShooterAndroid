@@ -2,6 +2,7 @@ package com.ak.spaceshooter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 
@@ -30,8 +31,10 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         final Button playButton = (Button) findViewById(R.id.play);
         final Button settingsButton = (Button) findViewById(R.id.settings);
+        final Button leaderboard = findViewById(R.id.leaderboard);
         playButton.setOnClickListener(this::onClickPlay);
         settingsButton.setOnClickListener(this::onClickSettings);
+        leaderboard.setOnClickListener(this::onClickLeaderBoard);
 
         //NOTIFICATION CODE
         NotificationChannel();
@@ -39,21 +42,22 @@ public class MainMenuActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 15);
         calendar.set(Calendar.MINUTE, 17);
-        calendar.set(Calendar.SECOND, 00);
+        calendar.set(Calendar.SECOND, 0);
 
         if (Calendar.getInstance().after(calendar)) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
         Intent intent = new Intent(MainMenuActivity.this, MemoBroadcast.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
-        }
-        //
+        //alarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis()+10_000,pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),pendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),1000*60*60,pendingIntent);
+        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+
 
 
 
@@ -66,6 +70,10 @@ public class MainMenuActivity extends AppCompatActivity {
     }
     public void onClickSettings(View v){
         startActivity(new Intent(this, SettingsActivity.class));
+
+    }
+    public void onClickLeaderBoard(View v){
+        startActivity(new Intent(this, LeaderboardActivity.class));
 
     }
 
